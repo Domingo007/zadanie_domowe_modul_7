@@ -1,3 +1,6 @@
+openai
+pycaret.clustering
 streamlit
-pycart
-python-dotenv
+pydub
+python-client
+plotly
