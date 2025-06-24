@@ -3,6 +3,15 @@ import streamlit as st
 import pandas as pd  # type: ignore
 from pycaret.clustering import load_model, predict_model  # type: ignore
 import plotly.express as px  # type: ignore
+from dotenv import dotenv_values
+from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct, Distance, VectorParams
+
+env = dotenv_values(".env")
+if 'QDRANT_URL' in st.secrets:
+    env['QDRANT_URL'] = st.secrets['QDRANT_URL']
+if 'QDRANT_API_KEY' in st.secrets:
+    env['QDRANT_API_KEY'] = st.secrets['QDRANT_API_KEY']
 
 MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 
@@ -13,6 +22,14 @@ CLUSTER_NAMES_AND_DESCRIPTIONS = 'welcome_survey_cluster_names_and_descriptions_
 @st.cache_data
 def get_model():
     return load_model(MODEL_NAME)
+
+@st.cache_resource
+def get_qdrant_client():
+    return QdrantClient(
+    url=["QDRANT_URL"], 
+    api_key=["QDRANT_API_KEY"],
+)
+
 
 @st.cache_data
 def get_cluster_names_and_descriptions():
