@@ -13,6 +13,13 @@ if 'QDRANT_URL' in st.secrets:
 if 'QDRANT_API_KEY' in st.secrets:
     env['QDRANT_API_KEY'] = st.secrets['QDRANT_API_KEY']
 
+@st.cache_resource
+def get_qdrant_client():
+    return QdrantClient(
+    url=["QDRANT_URL"], 
+    api_key=["QDRANT_API_KEY"],
+)
+
 MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 
 DATA = 'welcome_survey_simple_v2.csv'
@@ -23,18 +30,12 @@ CLUSTER_NAMES_AND_DESCRIPTIONS = 'welcome_survey_cluster_names_and_descriptions_
 def get_model():
     return load_model(MODEL_NAME)
 
-@st.cache_resource
-def get_qdrant_client():
-    return QdrantClient(
-    url=["QDRANT_URL"], 
-    api_key=["QDRANT_API_KEY"],
-)
-
 
 @st.cache_data
 def get_cluster_names_and_descriptions():
     with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f:
         return json.loads(f.read())
+    
 
 @st.cache_data
 def get_all_participants():

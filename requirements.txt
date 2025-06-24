@@ -1,4 +1,3 @@
-opeani
 streamlit
 pycart
 python-dotenv
