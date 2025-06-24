@@ -16,7 +16,7 @@ if 'QDRANT_API_KEY' in st.secrets:
 @st.cache_resource
 def get_qdrant_client():
     return QdrantClient(
-    url=["QDRANT_URL"], 
+    url=env["QDRANT_URL"], 
     api_key=["QDRANT_API_KEY"],
 )
 
@@ -33,9 +33,8 @@ def get_model():
 
 @st.cache_data
 def get_cluster_names_and_descriptions():
-    with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f:
+    with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f: 
         return json.loads(f.read())
-    
 
 @st.cache_data
 def get_all_participants():
