@@ -5,20 +5,7 @@ from pycaret.clustering import load_model, predict_model  # type: ignore
 import plotly.express as px  # type: ignore
 from dotenv import dotenv_values
 from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct, Distance, VectorParams
 
-env = dotenv_values(".env")
-if 'QDRANT_URL' in st.secrets:
-    env['QDRANT_URL'] = st.secrets['QDRANT_URL']
-if 'QDRANT_API_KEY' in st.secrets:
-    env['QDRANT_API_KEY'] = st.secrets['QDRANT_API_KEY']
-
-@st.cache_resource
-def get_qdrant_client():
-    return QdrantClient(
-    url=env["QDRANT_URL"], 
-    api_key=["QDRANT_API_KEY"],
-)
 
 MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 
@@ -30,10 +17,9 @@ CLUSTER_NAMES_AND_DESCRIPTIONS = 'welcome_survey_cluster_names_and_descriptions_
 def get_model():
     return load_model(MODEL_NAME)
 
-
 @st.cache_data
 def get_cluster_names_and_descriptions():
-    with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f: 
+    with open(CLUSTER_NAMES_AND_DESCRIPTIONS, "r", encoding='utf-8') as f:
         return json.loads(f.read())
 
 @st.cache_data
@@ -43,6 +29,13 @@ def get_all_participants():
     df_with_clusters = predict_model(model, data=all_df)
 
     return df_with_clusters
+
+@st.cache_resource
+def get_qdrant_client():
+    return QdrantClient(
+    url=env["QDRANT_URL"], 
+    api_key=env["QDRANT_API_KEY"],
+)
 
 with st.sidebar:
     st.header("Powiedz nam coś o sobie")
