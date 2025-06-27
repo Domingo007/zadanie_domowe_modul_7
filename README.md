@@ -1,1 +1,1 @@
-# zadanie_domowe_modul_7
+# Zadanie_domowe_modul_7_Domin
